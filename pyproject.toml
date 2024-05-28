@@ -11,6 +11,9 @@ indent-style = "tab"
 [tool.ruff.pydocstyle]
 convention = "pep257"
 
+[tool.hatch.build.targets.wheel]
+packages = ["htmx_utils"]
+
 [project]
 name = "django-htmx-utils"
 version = "0.9"
