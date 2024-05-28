@@ -1,0 +1,3 @@
+# Description
+Just a simple little utility module to compliment `django-htmx` by implementing an `Action` object class, which is similar to a Django `Form`. The idea is you can implement a button with HTMX that makes a POST request to a specific URL endpoint and handle it as you would a form, utilizing validation and all. A view class is implemented with `HtmxActionMixin`.
+Also implements functionality for reloading forms when they fail validation. Simply use `HtmxFormMixin` on your view.

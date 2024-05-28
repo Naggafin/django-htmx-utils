@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling", "django"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+ignore = ["E501"]
+
+[tool.ruff.format]
+indent-style = "tab"
+
+[tool.ruff.pydocstyle]
+convention = "pep257"
+
+[project]
+name = "django-htmx-utils"
+version = "0.9"
+authors = [
+  { name="naggafin", email="nevincoutu@gmail.com" },
+]
+description = "A standard way to handle HTMX requests for forms and buttons."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 4 - Beta",
+    "Framework :: Django",
+]
+dependencies = [
+	"django >= 3.2",
+	"django-htmx",
+]
+
+[project.urls]
+"Homepage" = "github.com/Naggafin/django-htmx-utils"
+"Bug Tracker" = "github.com/Naggafin/django-htmx-utils/issues"
