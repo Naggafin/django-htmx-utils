@@ -1,2 +1,2 @@
-from .actions import *  # NOQA
-from .views import *  # NOQA
+from .actions import Action
+from .views import HtmxActionView

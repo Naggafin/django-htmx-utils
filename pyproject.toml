@@ -3,12 +3,12 @@ requires = ["hatchling", "django"]
 build-backend = "hatchling.build"
 
 [tool.ruff]
-ignore = ["E501"]
+lint.ignore = ["E501"]
 
 [tool.ruff.format]
 indent-style = "tab"
 
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "pep257"
 
 [tool.hatch.build.targets.wheel]
@@ -16,7 +16,7 @@ packages = ["htmx_utils"]
 
 [project]
 name = "django-htmx-utils"
-version = "0.9"
+version = "0.91"
 authors = [
   { name="naggafin", email="nevincoutu@gmail.com" },
 ]

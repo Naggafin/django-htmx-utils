@@ -1,7 +1,5 @@
 from django.http import HttpRequest
 
-__all__ = ("Action",)
-
 
 class Action:
 	def __init__(self, request: HttpRequest = None, **kwargs):

@@ -180,7 +180,6 @@ class HtmxActionMixin(AccessMixin, TemplateResponseMixin, ContextMixin):
 		return action_class(**self.get_action_kwargs())
 
 	def action_valid(self, action: Action = None):
-		# make a template response for htmx if configured to
 		"""
 		Check if an action is valid and perform the necessary operations.
 
@@ -192,6 +191,7 @@ class HtmxActionMixin(AccessMixin, TemplateResponseMixin, ContextMixin):
 
 		:raise ImproperlyConfigured: If there is an error in the configuration.
 		"""
+		# make a template response for htmx if configured to
 		if self.request.htmx:
 			try:
 				context = self.get_context_data(action=action)
@@ -207,7 +207,6 @@ class HtmxActionMixin(AccessMixin, TemplateResponseMixin, ContextMixin):
 		return response
 
 	def action_invalid(self, action: Action = None):
-		# make a template response for htmx if configured to
 		"""
 		Perform an invalid action and handle the response.
 
@@ -219,6 +218,7 @@ class HtmxActionMixin(AccessMixin, TemplateResponseMixin, ContextMixin):
 
 		:raises ImproperlyConfigured: If there is an issue with the configuration.
 		"""
+		# make a template response for htmx if configured to
 		if self.request.htmx:
 			try:
 				context = self.get_context_data(action=action)
