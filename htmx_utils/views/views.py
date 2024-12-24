@@ -1,4 +1,5 @@
 from django.views.generic import View
+from django.views.generic.detail import SingleObjectMixin
 
 from .mixins import HtmxActionMixin
 
@@ -20,3 +21,9 @@ class HtmxActionView(HtmxActionMixin, View):
 	"""
 
 	pass
+
+
+class HtmxModelActionView(SingleObjectMixin, HtmxActionView):
+	def post(self, request, *args, **kwargs):
+		self.object = self.get_object()
+		return super().post(request, *args, **kwargs)
