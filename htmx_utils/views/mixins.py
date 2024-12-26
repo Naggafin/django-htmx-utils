@@ -179,7 +179,7 @@ class HtmxActionMixin(AccessMixin, TemplateResponseMixin, ContextMixin):
 		action_class = action_class or self.get_action_class()
 		return action_class(**self.get_action_kwargs())
 
-	def action_valid(self, action: Action = None):
+	def action_valid(self, action: Action):
 		"""
 		Check if an action is valid and perform the necessary operations.
 
@@ -196,8 +196,8 @@ class HtmxActionMixin(AccessMixin, TemplateResponseMixin, ContextMixin):
 			try:
 				context = self.get_context_data(action=action)
 				return self.render_to_response(context)
-			except ImproperlyConfigured as e:
-				logger.warning(e)
+			except ImproperlyConfigured:
+				pass
 		# otherwise, default to using the messages system and redirecting
 		for message, level in action.messages:
 			messages.add_message(self.request, level or messages.INFO, message)
@@ -206,7 +206,7 @@ class HtmxActionMixin(AccessMixin, TemplateResponseMixin, ContextMixin):
 			response = HttpResponseClientRedirect(response.url)
 		return response
 
-	def action_invalid(self, action: Action = None):
+	def action_invalid(self, action: Action):
 		"""
 		Perform an invalid action and handle the response.
 
@@ -223,8 +223,8 @@ class HtmxActionMixin(AccessMixin, TemplateResponseMixin, ContextMixin):
 			try:
 				context = self.get_context_data(action=action)
 				return self.render_to_response(context)
-			except ImproperlyConfigured as e:
-				logger.warning(e)
+			except ImproperlyConfigured:
+				pass
 		# otherwise, default to using the messages system and redirecting
 		for error in action.errors:
 			messages.error(self.request, error)
