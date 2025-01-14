@@ -1,7 +1,6 @@
 import logging
 
 from django.contrib import messages
-from django.contrib.auth.mixins import AccessMixin
 from django.core.exceptions import ImproperlyConfigured
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
@@ -61,7 +60,7 @@ class HtmxFormMixin(FormMixin):
 		return super().form_invalid(form)
 
 
-class HtmxActionMixin(AccessMixin, TemplateResponseMixin, ContextMixin):
+class HtmxActionMixin(TemplateResponseMixin, ContextMixin):
 	"""
 	A mixin class that provides common functionality for handling actions in HTMX views.
 
@@ -112,7 +111,7 @@ class HtmxActionMixin(AccessMixin, TemplateResponseMixin, ContextMixin):
 
 		:raise: None
 		"""
-		action = self.get_action()
+		action = self.action = self.get_action()
 		result = action.perform_action()
 		if isinstance(result, HttpResponse):
 			return result
@@ -194,8 +193,10 @@ class HtmxActionMixin(AccessMixin, TemplateResponseMixin, ContextMixin):
 		# make a template response for htmx if configured to
 		if self.request.htmx:
 			try:
-				context = self.get_context_data(action=action)
-				return self.render_to_response(context)
+				# check first, since we might not use a template in our response
+				if self.get_template_names():
+					context = self.get_context_data(action=action)
+					return self.render_to_response(context)
 			except ImproperlyConfigured:
 				pass
 		# otherwise, default to using the messages system and redirecting
@@ -221,8 +222,10 @@ class HtmxActionMixin(AccessMixin, TemplateResponseMixin, ContextMixin):
 		# make a template response for htmx if configured to
 		if self.request.htmx:
 			try:
-				context = self.get_context_data(action=action)
-				return self.render_to_response(context)
+				# check first, since we might not use a template in our response
+				if self.get_template_names():
+					context = self.get_context_data(action=action)
+					return self.render_to_response(context)
 			except ImproperlyConfigured:
 				pass
 		# otherwise, default to using the messages system and redirecting
@@ -258,25 +261,3 @@ class HtmxActionMixin(AccessMixin, TemplateResponseMixin, ContextMixin):
 		if not self.failure_url:
 			raise ImproperlyConfigured("No URL to redirect to. Provide a failure_url.")
 		return str(self.failure_url)
-
-	def get_template_names(self, action: Action = None):
-		"""
-		Like the regular 'get_template_names' method, except with
-		the ability to determine the correct template based upon
-		any particular action data.
-		"""
-		return super().get_template_names()
-
-	def handle_no_permission(self):
-		"""
-		Handle the case when the user does not have permission to access a resource.
-
-		:return: The response for the user when they do not have permission.
-		:rtype: HttpResponse
-
-		:raise: None
-		"""
-		response = super().handle_no_permission()
-		if self.request.htmx:
-			return HttpResponseClientRedirect(response.url)
-		return response

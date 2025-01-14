@@ -1,3 +1,4 @@
+import logging
 from http import HTTPStatus
 
 from django.conf import settings
@@ -6,6 +7,34 @@ from django.http import HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.utils.deprecation import MiddlewareMixin
 from django_htmx.http import HttpResponseClientRedirect
+
+
+class HtmxDebugMiddleware:
+	"""
+	Middleware to debug HTMX responses by printing the response content.
+	"""
+
+	def __init__(self, get_response):
+		self.get_response = get_response
+		self.logger = logging.getLogger(__name__)
+
+	def __call__(self, request):
+		response = self.get_response(request)
+
+		if request.htmx:
+			self.logger.debug("HTMX Request detected.")
+			self.logger.debug("Response Content:")
+
+			if hasattr(response, "content"):
+				try:
+					content = response.content.decode(response.charset)
+					self.logger.debug(content)
+				except (AttributeError, UnicodeDecodeError):
+					self.logger.debug("[Unable to decode response content]")
+			else:
+				self.logger.debug("[Response content unavailable]")
+
+		return response
 
 
 class HtmxMessagesMiddleware:
