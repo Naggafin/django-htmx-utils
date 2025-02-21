@@ -21,7 +21,11 @@ class HtmxDebugMiddleware:
 	def __call__(self, request):
 		response = self.get_response(request)
 
-		if request.htmx:
+		if (
+			request.htmx
+			and response.status_code == HTTPStatus.OK
+			and "text/html" in response["Content-Type"]
+		):
 			self.logger.debug("HTMX Request detected.")
 			self.logger.debug("Response Content:")
 
@@ -43,15 +47,17 @@ class HtmxMessagesMiddleware:
 
 	def __call__(self, request):
 		response = self.get_response(request)
+
 		if (
 			request.htmx
 			and response.status_code == HTTPStatus.OK
-			and response.get("Content-Type") == "text/html"
+			and "text/html" in response["Content-Type"]
 		):
 			messages = get_messages(request)
 			if messages:
+				context = {"messages": messages, "swap_oob": True}
 				rendered_messages = render_to_string(
-					settings.HTMX_MESSAGES_MIDDLEWARE_TEMPLATE, {"messages": messages}
+					settings.HTMX_MESSAGES_MIDDLEWARE_TEMPLATE, context
 				)
 				oob_html = f'<div id="{settings.HTMX_MESSAGES_MIDDLEWARE_HTML_ID}" hx-swap-oob="true">{rendered_messages}</div>'
 				response.content += oob_html.encode("utf-8")
